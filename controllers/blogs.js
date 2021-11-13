@@ -30,15 +30,36 @@ blogsRouter.get('/:id', (request, response, next) => {
     .catch(error => next(error))
 })
 
+
+
+
+// Ex 4.11 solution (the if block)
 blogsRouter.post('/', (request, response, next) => {
   const blog = new Blog(request.body)
+  if (!blog.likes && blog.likes !== 0) {
+    blog.likes = 0
+  }
 
+  // ex 4.12
+  // if (!blog.url || !blog.title) {
+  //   response.status(400).end()
+  // }
+
+  if (!blog.title) {
+    response.status(400).end()
+  }
+
+  console.log("blog<><><>", blog)
   blog
     .save()
     .then(result => {
       response.status(201).json(result)
     })
 })
+
+
+
+
 
 blogsRouter.delete('/:id', (request, response, next) => {
   Blog.findByIdAndRemove(request.params.id)
@@ -54,6 +75,7 @@ blogsRouter.put('/:id', (request, response, next) => {
   const blog = {
     content: body.content,
     important: body.important,
+    likes: body.important || 0,
   }
 
   Blog.findByIdAndUpdate(request.params.id, blog, { new: true })
