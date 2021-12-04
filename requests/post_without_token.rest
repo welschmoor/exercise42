@@ -1,9 +1,0 @@
-post http://localhost:3003/api/blogs
-Content-Type: application/json
-
-{
-    "title": "Without Token",
-    "author": "reama",
-    "url": "htt///aoawwidjwaoidj",
-    "likes": 2
-}
