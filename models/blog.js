@@ -10,11 +10,14 @@ mongoose.connect(url)
   })
 
 const blogSchema = new mongoose.Schema({
-  title: String,
-  author: String,
+  title: {type: String, required: true, minlength: 1},
+  author: {type: String, required: true, minlength: 2},
   url: String,
-  likes: Number
+  likes: Number,
+  date: Date,
+  user: {    type: mongoose.Schema.Types.ObjectId,    ref: 'User'  }
 })
+
 blogSchema.set("toJSON", { // this is to return id as string and to delete __v from being returned to frontend
   transform: (document, returnedObject) => {
     returnedObject.id = returnedObject._id.toString()
