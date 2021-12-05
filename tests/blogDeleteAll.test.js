@@ -1,4 +1,4 @@
-// 
+// npm test -- tests/blogDeleteAll.test.js
 const mongoose = require('mongoose')
 const supertest = require('supertest')
 const bcrypt = require('bcrypt')
@@ -13,7 +13,7 @@ describe('Delete all blog entries in DB', () => {
   // this deletes all blogposts
   beforeEach(async () => {
     await Blog.deleteMany({})
-    // await User.deleteMany({}) // this deletes all Users in DB 
+    await User.deleteMany({}) // this deletes all Users in DB 
 
   })
 

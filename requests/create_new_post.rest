@@ -1,10 +1,10 @@
 post http://localhost:3003/api/blogs
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QyIiwiaWQiOiI2MWFiOTFiMjA1YWEyNmM0NDcwMzY5OTYiLCJpYXQiOjE2Mzg2Mzg2MDksImV4cCI6MTYzODY0MjIwOX0.5QEwOqBW9-R9Z3gcsoW-TS8OumyHfqCf3_8BiCOLHW0
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QxIiwiaWQiOiI2MWFiYjg4ODNmODRhMGYxZTg5MGU0NDgiLCJpYXQiOjE2Mzg2NDUzNjUsImV4cCI6MTYzODY0ODk2NX0.AZJQ1ttwHf7lrM40l114-cWw0bJznMD0By2AtVaIVqI
 
 {
-    "title": "7777777777744Addinwadawdg New Post2333333332",
-    "author": "reama",
+    "title": "1 user1",
+    "author": "test1",
     "url": "htt///aowidjwaoidj",
-    "likes": 2
-}
+    "likes": 0
+} 

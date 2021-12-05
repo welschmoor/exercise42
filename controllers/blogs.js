@@ -38,16 +38,16 @@ blogsRouter.get('/:id', (request, response, next) => {
 // Ex 4.11 solution (the if block) . 4.20 solution
 blogsRouter.post('/', async (request, response, next) => {
   const body = request.body
-  console.log("request.token ", request.token)
+
   const decodedToken = jwt.verify(request.token, process.env.SECRET)
-  
+
   if (!request.token || !decodedToken.id) {
     return response.status(401).json({ error: 'token missing or invalid' })
   }
   const user = await User.findById(decodedToken.id)
-  
 
-  const blog = new Blog( {
+
+  const blog = new Blog({
     title: body.title,
     author: body.author,
     likes: body.likes || 0,
@@ -84,14 +84,27 @@ blogsRouter.post('/', async (request, response, next) => {
 
 
 
+// 4.21
+blogsRouter.delete('/:id', async (request, response, next) => {
+  const blogQ = await Blog.findById(request.params.id).populate("user")
+  const decodedToken = jwt.verify(request.token, process.env.SECRET)
 
-blogsRouter.delete('/:id', (request, response, next) => {
+  if (!request.token || !decodedToken.id) {
+    return response.status(401).json({ error: 'token missing or invalid' })
+  }
+  const user = await User.findById(decodedToken.id)
+
+  if (blogQ.user.username !== user.username) {
+    return response.status(401).json({ error: "No permission, you are not the user"})
+  }
   Blog.findByIdAndRemove(request.params.id)
     .then(() => {
       response.status(204).end()
     })
     .catch(error => next(error))
 })
+
+
 
 blogsRouter.put('/:id', (request, response, next) => {
   const body = request.body
