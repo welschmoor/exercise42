@@ -21,12 +21,14 @@ const errorHandler = (error, request, response, next) => {
     return response.status(400).send({ error: 'malformatted id' })
   } else if (error.name === 'ValidationError') {
     return response.status(400).json({ error: error.message })
+  } else if (error.name === "JsonWebTokenError") {
+    return response.status(401).json({ error: error.message })
   }
 
   next(error)
 }
 
-// 4.20 exercise
+// 4.20 exercise and 4.23 (added else if)
 const tokenExtractor = (request, response, next) => {
   const authorization = request.get('authorization')
   if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
@@ -35,9 +37,19 @@ const tokenExtractor = (request, response, next) => {
   next()
 }
 
+// 4.22 exercise
+const userExtractor = (request, response, next) => {
+  if (request.token) {
+    const decodedToken = jwt.verify(request.token, process.env.SECRET)
+    request.user = decodedToken.username
+  }
+  next()
+}
+
 module.exports = {
   requestLogger,
   unknownEndpoint,
   errorHandler,
-  tokenExtractor
+  tokenExtractor,
+  userExtractor,
 }

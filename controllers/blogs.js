@@ -2,7 +2,7 @@ const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
 const User = require('../models/user')
 const jwt = require('jsonwebtoken')
-
+const middleware = require('../utils/middleware')
 
 // const getTokenFrom = request => {
 //   const authorization = request.get('authorization')
@@ -13,6 +13,8 @@ const jwt = require('jsonwebtoken')
 // }
 
 blogsRouter.get('/', async (request, response) => {
+
+
   const allBlogs = await Blog.find({}).populate("user")
   response.json(allBlogs)
 })
@@ -36,11 +38,11 @@ blogsRouter.get('/:id', (request, response, next) => {
 
 
 // Ex 4.11 solution (the if block) . 4.20 solution
-blogsRouter.post('/', async (request, response, next) => {
+blogsRouter.post('/', middleware.tokenExtractor, async (request, response, next) => {
   const body = request.body
 
   const decodedToken = jwt.verify(request.token, process.env.SECRET)
-
+  console.log("decodedToken::::\n", decodedToken)
   if (!request.token || !decodedToken.id) {
     return response.status(401).json({ error: 'token missing or invalid' })
   }
@@ -72,8 +74,8 @@ blogsRouter.post('/', async (request, response, next) => {
   user.blogs = user.blogs.concat(savedBlog._id)
   await user.save()
 
-  response.json(savedBlog)
-
+  // response.json(savedBlog)
+  response.status(201).json(savedBlog)
   // blog
   //   .save()
   //   .then(result => {
@@ -85,16 +87,18 @@ blogsRouter.post('/', async (request, response, next) => {
 
 
 // 4.21
-blogsRouter.delete('/:id', async (request, response, next) => {
+blogsRouter.delete('/:id', middleware.tokenExtractor, async (request, response, next) => {
   const blogQ = await Blog.findById(request.params.id).populate("user")
   const decodedToken = jwt.verify(request.token, process.env.SECRET)
+
 
   if (!request.token || !decodedToken.id) {
     return response.status(401).json({ error: 'token missing or invalid' })
   }
-  const user = await User.findById(decodedToken.id)
-
-  if (blogQ.user.username !== user.username) {
+  // const user = await User.findById(decodedToken.id)
+  const user = request.user
+  console.log("user::::", user)
+  if (blogQ.user.username !== user) {
     return response.status(401).json({ error: "No permission, you are not the user"})
   }
   Blog.findByIdAndRemove(request.params.id)
