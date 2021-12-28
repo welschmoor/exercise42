@@ -13,13 +13,9 @@ const middleware = require('../utils/middleware')
 // }
 
 blogsRouter.get('/', async (request, response) => {
-
-
   const allBlogs = await Blog.find({}).populate("user")
   response.json(allBlogs)
 })
-
-
 
 
 blogsRouter.get('/:id', (request, response, next) => {
@@ -40,9 +36,8 @@ blogsRouter.get('/:id', (request, response, next) => {
 // Ex 4.11 solution (the if block) . 4.20 solution
 blogsRouter.post('/', middleware.tokenExtractor, async (request, response, next) => {
   const body = request.body
-
   const decodedToken = jwt.verify(request.token, process.env.SECRET)
-  console.log("decodedToken::::\n", decodedToken)
+
   if (!request.token || !decodedToken.id) {
     return response.status(401).json({ error: 'token missing or invalid' })
   }
